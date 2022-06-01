@@ -194,6 +194,7 @@ class ContextService implements ContextServiceInterface
             'redirect_uri'  => $this->callbackUrl,
             'nonce'         => $this->session->get(static::OPENID_SESSION_NONCE),
             'state'         => urlencode('token={'.$this->session->get(static::OPENID_SESSION_TOKEN).'}'),
+            'acr_values'    => 'eidas1'
         ];
         
         return $this->fcBaseUrl.'authorize?'.http_build_query($params);
