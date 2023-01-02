@@ -405,7 +405,7 @@ class ContextService implements ContextServiceInterface
     {
         $this->logger->debug('Generate Query String.');
         $params = [
-            'post_logout_redirect_uri' => $this->logoutUrl,
+            'post_logout_redirect_uri' => str_replace('http://', 'https://', $this->logoutUrl),
             'id_token_hint'            => $this->session->get(static::ID_TOKEN_HINT),
         ];
         
