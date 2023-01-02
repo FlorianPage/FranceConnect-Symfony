@@ -411,6 +411,7 @@ class ContextService implements ContextServiceInterface
         
         $this->logger->debug('Remove session token');
         $this->session->clear();
+        $this->logger->debug($this->fcBaseUrl.'logout?'.http_build_query($params));
         
         return $this->fcBaseUrl.'logout?'.http_build_query($params);
     }
