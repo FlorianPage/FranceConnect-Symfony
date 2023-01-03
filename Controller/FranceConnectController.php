@@ -56,6 +56,7 @@ class FranceConnectController extends AbstractController
             $this->contextService->getUserInfo($getParams);
         } catch (SecurityException $e) {
             $this->logger->error('Exception = ' . $e);
+            $this->logoutAction();
             // $this->logoutAction(3);
         }
 
