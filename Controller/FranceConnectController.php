@@ -37,12 +37,7 @@ class FranceConnectController extends AbstractController
     public function loginAction( )
     {
         $this->logger->debug('Generating a URL to get the authorization code.');
-        try {
-            $url = $this->contextService->generateAuthorizationURL();
-        } catch (SecurityException $e) {
-            $this->logger->error('Exception = ' . $e);
-            $this->logoutAction(3);
-        }
+        $url = $this->contextService->generateAuthorizationURL();
         
         return $this->redirect($url);
     }
@@ -57,7 +52,12 @@ class FranceConnectController extends AbstractController
     {
         $this->logger->debug('Callback intercept.');
         $getParams = $request->query->all();
-        $this->contextService->getUserInfo($getParams);
+        try {
+            $this->contextService->getUserInfo($getParams);
+        } catch (SecurityException $e) {
+            $this->logger->error('Exception = ' . $e);
+            $this->logoutAction(3);
+        }
 
         switch ($this->getParameter('france_connect.result_type')) {
             case 'route' :
