@@ -3,6 +3,7 @@
 namespace KleeGroup\FranceConnectBundle\Controller;
 
 use KleeGroup\FranceConnectBundle\Manager\ContextServiceInterface;
+use KleeGroup\FranceConnectBundle\Manager\Exception\SecurityException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -36,7 +37,12 @@ class FranceConnectController extends AbstractController
     public function loginAction( )
     {
         $this->logger->debug('Generating a URL to get the authorization code.');
-        $url = $this->contextService->generateAuthorizationURL();
+        try {
+            $url = $this->contextService->generateAuthorizationURL();
+        } catch (SecurityException $e) {
+            $this->logger->error('Exception = ' . $e);
+            $this->logoutAction(3);
+        }
         
         return $this->redirect($url);
     }
