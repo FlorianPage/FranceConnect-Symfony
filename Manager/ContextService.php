@@ -405,7 +405,10 @@ class ContextService implements ContextServiceInterface
     {
         $this->logger->debug('Generate Query String.');
         $this->logger->debug('FLASH 2 = ' . $flash);
-        $redirectUri = str_replace('http://', 'https://', $this->logoutUrl . "&flash=" . $flash);
+        $redirectUri = str_replace('http://', 'https://', $this->logoutUrl);
+        if (!empty($flash)) {
+            $redirectUri .= '/' . $flash;
+        }
         $this->logger->debug('REDIRECT URI = ' . $redirectUri);
         $params = [
             'post_logout_redirect_uri' => $redirectUri,
