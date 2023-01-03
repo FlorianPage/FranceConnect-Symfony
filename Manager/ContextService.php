@@ -401,7 +401,7 @@ class ContextService implements ContextServiceInterface
     /**
      * @inheritdoc
      */
-    public function generateLogoutURL()
+    public function generateLogoutURL(string $flash = '')
     {
         $this->logger->debug('Generate Query String.');
         $params = [
