@@ -80,6 +80,7 @@ class FranceConnectController extends AbstractController
         $this->logger->debug('Get Logout URL.');
         $this->logger->debug('CODE ERREUR = ' . $codeErreur);
         $url = $this->contextService->generateLogoutURL($codeErreur);
+        $this->logger->debug('URL = ' . $url);
         
         return $this->redirect($url);
     }
