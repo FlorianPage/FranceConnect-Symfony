@@ -404,8 +404,9 @@ class ContextService implements ContextServiceInterface
     public function generateLogoutURL(string $flash = '')
     {
         $this->logger->debug('Generate Query String.');
+        $this->logger->debug('FLASH 2 = ' . $flash);
         $params = [
-            'post_logout_redirect_uri' => str_replace('http://', 'https://', $this->logoutUrl),
+            'post_logout_redirect_uri' => str_replace('http://', 'https://', $this->logoutUrl . "&flash=" . $flash),
             'id_token_hint'            => $this->session->get(static::ID_TOKEN_HINT),
         ];
         
