@@ -274,7 +274,7 @@ class ContextService implements ContextServiceInterface
         
         if ($token != $this->session->get(static::OPENID_SESSION_TOKEN)) {
             $this->logger->error('The value of the parameter STATE is not equal to the one which is expected');
-            $this->generateLogoutURL(2);
+            return $this->redirect($this->generateLogoutURL(2));
             // throw new SecurityException("The token is invalid.");
         }
     }
@@ -326,7 +326,7 @@ class ContextService implements ContextServiceInterface
         // check nonce parameter
         if ($payload['nonce'] != $this->session->get(static::OPENID_SESSION_NONCE)) {
             $this->logger->error('The value of the parameter NONCE is not equal to the one which is expected');
-            $this->generateLogoutURL(3);
+            return $this->redirect($this->generateLogoutURL(3));
             // throw new SecurityException("The nonce parameter is invalid");
         }
         // verify the signature of jwt
@@ -334,7 +334,7 @@ class ContextService implements ContextServiceInterface
         $jws = SimpleJWS::load($id_token);
         if (!$jws->verify($this->clientSecret)) {
             $this->logger->error('The signature of the JWT is not valid.');
-            $this->generateLogoutURL(4);
+            return $this->redirect($this->generateLogoutURL(4));
             // throw new SecurityException("JWS is invalid");
         }
         
@@ -404,7 +404,7 @@ class ContextService implements ContextServiceInterface
     /**
      * @inheritdoc
      */
-    public function generateLogoutURL(?int $codeErreur)
+    public function generateLogoutURL(?int $codeErreur = null)
     {
         $this->logger->debug('Generate Query String.');
         $this->logger->debug('CODE ERREUR 2 = ' . $codeErreur);
