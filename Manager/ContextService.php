@@ -401,12 +401,12 @@ class ContextService implements ContextServiceInterface
     /**
      * @inheritdoc
      */
-    public function generateLogoutURL(string $flash)
+    public function generateLogoutURL(?int $flash)
     {
         $this->logger->debug('Generate Query String.');
         $this->logger->debug('FLASH 2 = ' . $flash);
         $redirectUri = str_replace('http://', 'https://', $this->logoutUrl);
-        if (!empty($flash)) {
+        if (!is_null($flash)) {
             $redirectUri .= '/' . $flash;
         }
         $this->logger->debug('REDIRECT URI = ' . $redirectUri);

@@ -39,5 +39,5 @@ interface ContextServiceInterface
      *
      * @return string
      */
-    public function generateLogoutURL(string $flash);
+    public function generateLogoutURL(?int $flash);
 }
