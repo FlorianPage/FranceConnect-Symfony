@@ -66,14 +66,14 @@ class FranceConnectController extends AbstractController
     }
     
     /**
-     * @Route("/logout_fc/{flash}")
+     * @Route("/logout_fc/{codeErreur}")
      * @return RedirectResponse
      */
-    public function logoutAction(?int $flash = null)
+    public function logoutAction(?int $codeErreur = null)
     {
         $this->logger->debug('Get Logout URL.');
-        $this->logger->debug('FLASH = ' . $flash);
-        $url = $this->contextService->generateLogoutURL($flash);
+        $this->logger->debug('CODE ERREUR = ' . $codeErreur);
+        $url = $this->contextService->generateLogoutURL($codeErreur);
         
         return $this->redirect($url);
     }
