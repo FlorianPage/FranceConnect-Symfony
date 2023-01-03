@@ -66,7 +66,7 @@ class FranceConnectController extends AbstractController
     }
     
     /**
-     * @Route("/logout_fc")
+     * @Route("/logout_fc/{flash}")
      * @return RedirectResponse
      */
     public function logoutAction(string $flash = '')
