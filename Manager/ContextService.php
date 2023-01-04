@@ -414,6 +414,10 @@ class ContextService implements ContextServiceInterface
         if (!is_null($codeErreur)) {
             $redirectUri .= '/' . $codeErreur;
         }
+        $token = $this->session->get(static::ID_TOKEN_HINT);
+        if (empty($token)) {
+            $token = urlencode('token={'.$this->session->get(static::OPENID_SESSION_TOKEN).'}');
+        }
         $this->logger->debug('REDIRECT URI = ' . $redirectUri);
         $params = [
             'post_logout_redirect_uri' => $redirectUri,
