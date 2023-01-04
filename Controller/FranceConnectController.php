@@ -57,7 +57,7 @@ class FranceConnectController extends AbstractController
         } catch (SecurityException $e) {
             $this->logger->error('Exception = ' . $e);
             $this->logger->error('Exception code = ' . $e->getCode());
-            $url = $this->contextService->generateLogoutURL(3);
+            $url = $this->contextService->generateLogoutURL($e->getCode());
         
             return $this->redirect($url);
             // $this->logoutAction(3);

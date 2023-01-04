@@ -277,7 +277,7 @@ class ContextService implements ContextServiceInterface
             // $exception = new SecurityException();
             // $exception->redirectResponse(2);
             // throw $exception;
-            throw new SecurityException("The token is invalid.");
+            throw new SecurityException("The token is invalid.", 2);
         }
     }
     
@@ -328,14 +328,14 @@ class ContextService implements ContextServiceInterface
         // check nonce parameter
         if ($payload['nonce'] != $this->session->get(static::OPENID_SESSION_NONCE)) {
             $this->logger->error('The value of the parameter NONCE is not equal to the one which is expected');
-            throw new SecurityException("The nonce parameter is invalid");
+            throw new SecurityException("The nonce parameter is invalid", 3);
         }
         // verify the signature of jwt
         $this->logger->debug('Check JWT signature.');
         $jws = SimpleJWS::load($id_token);
         if (!$jws->verify($this->clientSecret)) {
             $this->logger->error('The signature of the JWT is not valid.');
-            throw new SecurityException("JWS is invalid");
+            throw new SecurityException("JWS is invalid", 4);
         }
         
         $this->session->remove(static::OPENID_SESSION_NONCE);
