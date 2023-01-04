@@ -421,7 +421,7 @@ class ContextService implements ContextServiceInterface
         $this->logger->debug('REDIRECT URI = ' . $redirectUri);
         $params = [
             'post_logout_redirect_uri' => $redirectUri,
-            'id_token_hint'            => $this->session->get(static::ID_TOKEN_HINT),
+            'id_token_hint'            => $token,
         ];
         
         $this->logger->debug('Remove session token');
