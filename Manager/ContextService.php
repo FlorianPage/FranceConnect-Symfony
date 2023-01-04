@@ -186,6 +186,8 @@ class ContextService implements ContextServiceInterface
         $this->session->set(static::OPENID_SESSION_TOKEN, $this->getRandomToken());
         $this->session->set(static::OPENID_SESSION_NONCE, $this->getRandomToken());
         
+        $this->logger->debug($this->session->get(static::OPENID_SESSION_TOKEN));
+
         $this->logger->debug('Generate Query String.');
         $params = [
             'response_type' => 'code',
