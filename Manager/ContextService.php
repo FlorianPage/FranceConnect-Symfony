@@ -418,6 +418,7 @@ class ContextService implements ContextServiceInterface
             'id_token_hint'            => $this->session->get(static::ID_TOKEN_HINT),
         ];
         
+        $this->logger->debug($this->session);
         $this->logger->debug('Remove session token');
         $this->session->clear();
         $this->logger->debug($this->fcBaseUrl.'logout?'.http_build_query($params));
