@@ -59,12 +59,7 @@ class FranceConnectController extends AbstractController
             $this->logger->error('Exception code = ' . $e->getCode());
             $url = $this->contextService->generateLogoutURL($e->getCode());
         
-            if (2 === $e->getCode()) {
-                return $this->redirect('app_index');
-            } else {
-                return $this->redirect($url);
-            }
-            // $this->logoutAction(3);
+            return $this->redirect($url);
         }
 
         switch ($this->getParameter('france_connect.result_type')) {
