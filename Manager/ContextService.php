@@ -209,8 +209,9 @@ class ContextService implements ContextServiceInterface
      */
     private function getRandomToken($upper = false)
     {
+        $this->logger->debug('SHA1 VALUE = ' . $upper);
         $sha1 = sha1(random_int(0, mt_getrandmax()));
-        $this->logger->debug('SHA1 = ' . $sha1);
+        $this->logger->debug('SHA1 LOWER = ' . $sha1);
         if ($upper) {
             // * bidouille pour mettre des majuscules random uniquement dans le NONCE demandé par FC
             // * Dans la documentation impossible de trouver l'information
