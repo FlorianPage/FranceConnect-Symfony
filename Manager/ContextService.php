@@ -210,15 +210,22 @@ class ContextService implements ContextServiceInterface
     private function getRandomToken($upper = false)
     {
         $sha1 = sha1(random_int(0, mt_getrandmax()));
+        $this->logger->debug('upper = ' . $upper);
         if ($upper) {
             // $arrayLettresChangees = [];
             // * bidouille pour mettre des majuscules random uniquement dans le NONCE demandé par FC
             // * Dans la documentation impossible de trouver l'information
             foreach (str_split($sha1) as $position => $letter) {
+                $this->logger->debug('CHAR = ' . $letter);
                 if (preg_match('/[a-f]/', $letter)) {
+                    $this->logger->debug('LETTER = ' . $letter);
                     if (rand(0, 1)) {
+                        $this->logger->debug('SHA1 = ' . $sha1);
+                        $this->logger->debug('STTTOUPPER LETTER = ' . strtoupper($letter));
+                        $this->logger->debug('POSITION = ' . $position);
                         // $arrayLettresChangees[$position] = strtoupper($letter);
                         substr_replace($sha1, strtoupper($letter), $position, 1);
+                        $this->logger->debug('SHA1 2222 = ' . $sha1);
                     }
                 }
             }
