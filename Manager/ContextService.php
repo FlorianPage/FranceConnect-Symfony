@@ -327,9 +327,10 @@ class ContextService implements ContextServiceInterface
         $this->session->set(static::ID_TOKEN_HINT, $id_token);
         $all_part = explode(".", $id_token);
         $payload = json_decode(base64_decode($all_part[1]), true);
-        $this->logger->debug('ALL PART 0 decode = ' . implode(" ### ", json_decode(base64_decode($all_part[0]), true)));
+        $this->logger->debug('PAYLOAD = ' . implode(" === ", $payload));
+        $this->logger->debug('ALL PART decode = ' . implode(" ### ", json_decode(base64_decode($all_part, true))));
 
-        // $this->verifyState($params['state']);
+        $this->verifyState($payload['state']);
         
         // check nonce parameter
         if ($payload['nonce'] != $this->session->get(static::OPENID_SESSION_NONCE)) {
