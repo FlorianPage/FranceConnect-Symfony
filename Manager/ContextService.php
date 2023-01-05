@@ -184,7 +184,7 @@ class ContextService implements ContextServiceInterface
     {
         $this->logger->debug('Set session tokens');
         $this->session->set(static::OPENID_SESSION_TOKEN, $this->getRandomToken());
-        $this->session->set(static::OPENID_SESSION_NONCE, $this->getRandomToken());
+        $this->session->set(static::OPENID_SESSION_NONCE, $this->getRandomToken(true));
         
         $this->logger->debug($this->session->get(static::OPENID_SESSION_TOKEN));
 
@@ -207,21 +207,24 @@ class ContextService implements ContextServiceInterface
      *
      * @return string
      */
-    private function getRandomToken()
+    private function getRandomToken($upper = false)
     {
         $sha1 = sha1(random_int(0, mt_getrandmax()));
-        // $arrayLettresChangees = [];
-        // * bidouille pour mettre des majuscules random uniquement dans le NONCE demandé par FC
-        // * Dans la documentation impossible de trouver l'information
-        foreach (str_split($sha1) as $position => $letter) {
-            if (preg_match('/[a-f]/', $letter)) {
-                if (rand(0, 1)) {
-                    // $arrayLettresChangees[$position] = strtoupper($letter);
-                    substr_replace($sha1, strtoupper($letter), $position, 1);
+        if ($upper) {
+            // $arrayLettresChangees = [];
+            // * bidouille pour mettre des majuscules random uniquement dans le NONCE demandé par FC
+            // * Dans la documentation impossible de trouver l'information
+            foreach (str_split($sha1) as $position => $letter) {
+                if (preg_match('/[a-f]/', $letter)) {
+                    if (rand(0, 1)) {
+                        // $arrayLettresChangees[$position] = strtoupper($letter);
+                        substr_replace($sha1, strtoupper($letter), $position, 1);
+                    }
                 }
             }
         }
-        return ;
+        
+        return $sha1;
     }
     
     /**
