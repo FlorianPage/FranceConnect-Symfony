@@ -185,8 +185,6 @@ class ContextService implements ContextServiceInterface
         $this->logger->debug('Set session tokens');
         $this->session->set(static::OPENID_SESSION_TOKEN, $this->getRandomToken());
         $this->session->set(static::OPENID_SESSION_NONCE, $this->getRandomToken(true));
-        
-        $this->logger->debug($this->session->get(static::OPENID_SESSION_TOKEN));
 
         $this->logger->debug('Generate Query String.');
         $params = [
@@ -209,9 +207,7 @@ class ContextService implements ContextServiceInterface
      */
     private function getRandomToken($upper = false)
     {
-        $this->logger->debug('SHA1 VALUE = ' . $upper);
         $sha1 = sha1(random_int(0, mt_getrandmax()));
-        $this->logger->debug('SHA1 LOWER = ' . $sha1);
         if ($upper) {
             // * bidouille pour mettre des majuscules random uniquement dans le NONCE demandé par FC
             // * Dans la documentation impossible de trouver l'information
@@ -223,7 +219,6 @@ class ContextService implements ContextServiceInterface
                 }
             }
         }
-        $this->logger->debug('SHA1 UPPER = ' . $sha1);
         
         return $sha1;
     }
@@ -247,6 +242,8 @@ class ContextService implements ContextServiceInterface
             throw new Exception('FranceConnect error => '.$params["error"]);
         }
         
+        // * On appelle verifyState plus loin pour pouvoir afficher l'erreur de token
+        // * Sinon on ne peut pas se déconnecter de la session en cours
         // $this->verifyState($params['state']);
         $accessToken = $this->getAccessToken($params['code'], $params['state']);
         $userInfo = $this->getInfos($accessToken);
@@ -292,9 +289,6 @@ class ContextService implements ContextServiceInterface
         
         if ($token != $this->session->get(static::OPENID_SESSION_TOKEN)) {
             $this->logger->error('The value of the parameter STATE is not equal to the one which is expected');
-            // $exception = new SecurityException();
-            // $exception->redirectResponse(2);
-            // throw $exception;
             throw new SecurityException("The token is invalid.", 2);
         }
     }
@@ -427,7 +421,6 @@ class ContextService implements ContextServiceInterface
     public function generateLogoutURL(?int $codeErreur)
     {
         $this->logger->debug('Generate Query String.');
-        $this->logger->debug('CODE ERREUR 2 = ' . $codeErreur);
         $redirectUri = str_replace('http://', 'https://', $this->logoutUrl);
         if (!is_null($codeErreur)) {
             $redirectUri .= '/' . $codeErreur;
@@ -436,7 +429,6 @@ class ContextService implements ContextServiceInterface
         if (empty($token)) {
             $token = urlencode('token={'.$this->session->get(static::OPENID_SESSION_TOKEN).'}');
         }
-        $this->logger->debug('REDIRECT URI = ' . $redirectUri);
         $params = [
             'post_logout_redirect_uri' => $redirectUri,
             'id_token_hint'            => $token,
@@ -444,7 +436,6 @@ class ContextService implements ContextServiceInterface
         
         $this->logger->debug('Remove session token');
         $this->session->clear();
-        $this->logger->debug($this->fcBaseUrl.'logout?'.http_build_query($params));
         
         return $this->fcBaseUrl.'logout?'.http_build_query($params);
     }

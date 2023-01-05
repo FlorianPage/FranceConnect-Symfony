@@ -52,11 +52,10 @@ class FranceConnectController extends AbstractController
     {
         $this->logger->debug('Callback intercept.');
         $getParams = $request->query->all();
+        // * On catch les securityException ici pour déconnecter la session FC en cas d'exception de ce type
         try {
             $this->contextService->getUserInfo($getParams);
         } catch (SecurityException $e) {
-            $this->logger->error('Exception = ' . $e);
-            $this->logger->error('Exception code = ' . $e->getCode());
             $url = $this->contextService->generateLogoutURL($e->getCode());
         
             return $this->redirect($url);
@@ -81,9 +80,7 @@ class FranceConnectController extends AbstractController
     public function logoutAction(?int $codeErreur = null)
     {
         $this->logger->debug('Get Logout URL.');
-        $this->logger->debug('CODE ERREUR = ' . $codeErreur);
         $url = $this->contextService->generateLogoutURL($codeErreur);
-        $this->logger->debug('URL = ' . $url);
         
         return $this->redirect($url);
     }
