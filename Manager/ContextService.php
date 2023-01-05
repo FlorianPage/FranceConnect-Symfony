@@ -326,6 +326,10 @@ class ContextService implements ContextServiceInterface
         $this->logger->debug('ID TOKEN = ' . $id_token);
         $this->session->set(static::ID_TOKEN_HINT, $id_token);
         $all_part = explode(".", $id_token);
+        $preload = json_decode(base64_decode($all_part[1]), true);
+        foreach ($preload as $key => $value) {           
+            $this->logger->debug($key . ' <===> ' . $value);
+        }
         $payload = json_decode(base64_decode($all_part[1]), true);
         foreach ($payload as $key => $value) {           
             $this->logger->debug($key . ' = ' . $value);
