@@ -231,7 +231,8 @@ class ContextService implements ContextServiceInterface
             throw new Exception('FranceConnect error => '.$params["error"]);
         }
         
-        $accessToken = $this->getAccessToken($params['code']);
+        // $this->verifyState($params['state']);
+        $accessToken = $this->getAccessToken($params['code'], $params['state']);
         $userInfo = $this->getInfos($accessToken);
         $userInfo['access_token'] = $accessToken;
         
@@ -291,7 +292,7 @@ class ContextService implements ContextServiceInterface
      * @throws SecurityException
      * @throws Exception
      */
-    private function getAccessToken($code)
+    private function getAccessToken($code, $state)
     {
         $this->logger->debug('Get Access Token.');
         $this->initRequest();
@@ -321,22 +322,12 @@ class ContextService implements ContextServiceInterface
         }
         
         $result_array = $response->body;
-        $this->logger->debug('RESULT ARRAY = ' . implode(" @@@ ", $result_array));
         $id_token = $result_array['id_token'];
-        $this->logger->debug('ID TOKEN = ' . $id_token);
         $this->session->set(static::ID_TOKEN_HINT, $id_token);
         $all_part = explode(".", $id_token);
-        $preload = json_decode(base64_decode($all_part[1]), true);
-        foreach ($preload as $key => $value) {           
-            $this->logger->debug($key . ' <===> ' . $value);
-        }
         $payload = json_decode(base64_decode($all_part[1]), true);
-        foreach ($payload as $key => $value) {           
-            $this->logger->debug($key . ' = ' . $value);
-        }
-        $this->logger->debug('OPENID SESSION TOKEN = ' . $this->session->get(static::OPENID_SESSION_TOKEN));
 
-        $this->verifyState($payload['state']);
+        $this->verifyState($state);
         
         // check nonce parameter
         if ($payload['nonce'] != $this->session->get(static::OPENID_SESSION_NONCE)) {
