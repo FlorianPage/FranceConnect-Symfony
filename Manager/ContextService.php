@@ -231,7 +231,6 @@ class ContextService implements ContextServiceInterface
             throw new Exception('FranceConnect error => '.$params["error"]);
         }
         
-        $this->verifyState($params['state']);
         $accessToken = $this->getAccessToken($params['code']);
         $userInfo = $this->getInfos($accessToken);
         $userInfo['access_token'] = $accessToken;
@@ -322,10 +321,16 @@ class ContextService implements ContextServiceInterface
         }
         
         $result_array = $response->body;
+        $this->logger->debug('RESULT ARRAY = ' . $result_array);
         $id_token = $result_array['id_token'];
+        $this->logger->debug('ID TOKEN = ' . $result_array['id_token']);
         $this->session->set(static::ID_TOKEN_HINT, $id_token);
         $all_part = explode(".", $id_token);
+        $this->logger->debug('ALL PART = ' . $all_part);
         $payload = json_decode(base64_decode($all_part[1]), true);
+        $this->logger->debug('ALL PART 0 decode = ' . json_decode(base64_decode($all_part[0]), true));
+
+        // $this->verifyState($params['state']);
         
         // check nonce parameter
         if ($payload['nonce'] != $this->session->get(static::OPENID_SESSION_NONCE)) {
