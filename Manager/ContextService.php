@@ -209,7 +209,19 @@ class ContextService implements ContextServiceInterface
      */
     private function getRandomToken()
     {
-        return sha1(random_int(0, mt_getrandmax()));
+        $sha1 = sha1(random_int(0, mt_getrandmax()));
+        // $arrayLettresChangees = [];
+        // * bidouille pour mettre des majuscules random uniquement dans le NONCE demandé par FC
+        // * Dans la documentation impossible de trouver l'information
+        foreach (str_split($sha1) as $position => $letter) {
+            if (preg_match('/[a-f]/', $letter)) {
+                if (rand(0, 1)) {
+                    // $arrayLettresChangees[$position] = strtoupper($letter);
+                    substr_replace($sha1, strtoupper($letter), $position, 1);
+                }
+            }
+        }
+        return ;
     }
     
     /**
