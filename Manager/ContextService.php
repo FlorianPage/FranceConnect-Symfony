@@ -321,12 +321,11 @@ class ContextService implements ContextServiceInterface
         }
         
         $result_array = $response->body;
-        $this->logger->debug('RESULT ARRAY = ' . $result_array);
+        $this->logger->debug('RESULT ARRAY = ' . implode(" @@@ ", $result_array));
         $id_token = $result_array['id_token'];
-        $this->logger->debug('ID TOKEN = ' . $result_array['id_token']);
+        $this->logger->debug('ID TOKEN = ' . $id_token);
         $this->session->set(static::ID_TOKEN_HINT, $id_token);
         $all_part = explode(".", $id_token);
-        $this->logger->debug('ALL PART = ' . $all_part);
         $payload = json_decode(base64_decode($all_part[1]), true);
         $this->logger->debug('ALL PART 0 decode = ' . json_decode(base64_decode($all_part[0]), true));
 
